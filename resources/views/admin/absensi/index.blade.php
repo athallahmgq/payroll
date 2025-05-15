@@ -43,17 +43,16 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($absensi as $absensi)
-                
+                @foreach ($absensi as $item)
                     <tr>
-                        <td> {{ $absensi->karyawan && $absensi->karyawan->user ? $absensi->karyawan->user->name : '-' }} 
-                            ({{ $absensi->karyawan->nik ?? '-' }})
+                        <td> {{ $item->karyawan && $item->karyawan->user ? $item->karyawan->user->name : '-' }} 
+                            ({{ $item->karyawan->nik ?? '-' }})
                         </td>
-                        <td>{{ \Carbon\Carbon::parse($absensi->tanggal)->isoFormat('DD MMM YYYY') }}</td>
-                        <td>{{ $absensi->jam_masuk ? \Carbon\Carbon::parse($absensi->jam_masuk)->format('H:i') : '-' }}</td>
-                        <td>{{ $absensi->jam_pulang ? \Carbon\Carbon::parse($absensi->jam_pulang)->format('H:i') : '-' }}</td>
-                        <td>{{ ucwords($absensi->status) }}</td>
-                        <td>{{ $absensi->keterangan ?? '-' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->tanggal)->isoFormat('DD MMM YYYY') }}</td>
+                        <td>{{ $item->jam_masuk ? \Carbon\Carbon::parse($item->jam_masuk)->format('H:i') : '-' }}</td>
+                        <td>{{ $item->jam_pulang ? \Carbon\Carbon::parse($item->jam_pulang)->format('H:i') : '-' }}</td>
+                        <td>{{ ucwords($item->status) }}</td>
+                        <td>{{ $item->keterangan ?? '-' }}</td>
                     </tr>
                 @endforeach
             </tbody>
