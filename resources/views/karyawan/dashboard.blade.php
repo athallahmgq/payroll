@@ -63,4 +63,9 @@
         </p>
         <a href="{{ route('karyawan.profile.complete.form') }}" class="button">Lengkapi Profil Karyawan</a>
     @endif
+
+    
+
+
 @endsection
+

@@ -8,14 +8,15 @@ use App\Models\Karyawan;
 use App\Models\Gaji;
 use App\Models\Absensi;
 use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class GajiController extends Controller
 {
     public function index()
     {
-        $karyawans = Karyawan::all();
-        $gajis = Gaji::with('karyawan')->orderBy('tahun', 'desc')
+        $karyawans = Karyawan::with('user')->get();
+        $gajis = Gaji::with(['karyawan.user'])->orderBy('tahun', 'desc')
             ->orderBy('bulan', 'desc')
             ->get();
             

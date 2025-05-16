@@ -64,6 +64,6 @@ class AbsensiController extends Controller
                               ->distinct()->orderBy('tahun', 'desc')->pluck('tahun');
         if($listTahun->isEmpty()) $listTahun->push(date('Y'));
 
-        return view('karyawan.absensi.riwayat', compact('riwayat', 'bulan', 'tahun', 'listBulan', 'listTahun'));
+        return view('karyawan.absensi.', compact('riwayat', 'bulan', 'tahun', 'listBulan', 'listTahun'));
     }
 }

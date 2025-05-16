@@ -16,4 +16,17 @@ class Karyawan extends Model
     public function user() { return $this->belongsTo(User::class); }
     public function absensi() { return $this->hasMany(Absensi::class); }
     public function gaji() { return $this->hasMany(Gaji::class); }
+
+    public function getNamaAttribute()
+{
+   
+    if ($this->relationLoaded('user') && $this->user) {
+        return $this->user->name;
+    } elseif ($this->user_id) {
+        
+        $user = User::find($this->user_id);
+        return $user ? $user->name : 'Nama tidak tersedia';
+    }
+    return 'Nama tidak tersedia';
+}
 }

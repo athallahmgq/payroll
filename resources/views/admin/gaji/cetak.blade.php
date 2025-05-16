@@ -101,9 +101,9 @@
                     <td><strong>{{ $bulanList[$gaji->bulan] }} {{ $gaji->tahun }}</strong></td>
                 </tr>
                 <tr>
-                    <td>NIP</td>
+                    <td>NIK</td>
                     <td>:</td>
-                    <td>{{ $gaji->karyawan->nip }}</td>
+                    <td>{{ $gaji->karyawan->nik }}</td>
                     <td>Tanggal Pembayaran</td>
                     <td>:</td>
                     <td>{{ date('d F Y', strtotime($gaji->tanggal_pembayaran)) }}</td>
@@ -111,7 +111,7 @@
                 <tr>
                     <td>Jabatan</td>
                     <td>:</td>
-                    <td>{{ $gaji->karyawan->jabatan ?? '-' }}</td>
+                    <td>{{ $gaji->karyawan->posisi ?? '-' }}</td>
                     <td>Departemen</td>
                     <td>:</td>
                     <td>{{ $gaji->karyawan->departemen ?? '-' }}</td>

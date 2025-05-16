@@ -19,7 +19,7 @@
                                     <select name="karyawan_id" id="karyawan_id" class="form-control" required>
                                         <option value="">-- Pilih Karyawan --</option>
                                         @foreach ($karyawans as $karyawan)
-                                            <option value="{{ $karyawan->id }}">{{ $karyawan->nama }} - {{ $karyawan->nip }}</option>
+                                            <option value="{{ $karyawan->id }}">{{ $karyawan->nama }} - {{ $karyawan->nik }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -70,7 +70,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Karyawan</th>
-                                    <th>NIP</th>
+                                    <th>NIK</th>
                                     <th>Periode</th>
                                     <th>Kehadiran</th>
                                     <th>Gaji Pokok</th>
@@ -83,8 +83,8 @@
                                 @foreach ($gajis as $index => $gaji)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $gaji->karyawan->nama }}</td>
-                                    <td>{{ $gaji->karyawan->nip }}</td>
+                                    <td>{{ $gaji->karyawan->nama ?? 'Nama tidak tersedia' }}</td>
+                                    <td>{{ $gaji->karyawan->nik }}</td>
                                     <td>{{ $bulanList[$gaji->bulan] }} {{ $gaji->tahun }}</td>
                                     <td>
                                         Hadir: {{ $gaji->total_hadir }} kali<br>

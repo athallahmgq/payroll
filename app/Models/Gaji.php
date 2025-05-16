@@ -13,5 +13,14 @@ class Gaji extends Model
         'total_sakit', 'total_tanpa_keterangan', 'gaji_pokok', 'potongan',
         'gaji_bersih', 'keterangan', 'tanggal_pembayaran',
     ];
-    public function karyawan() { return $this->belongsTo(Karyawan::class); }
+
+    public function karyawan() 
+    { 
+        return $this->belongsTo(Karyawan::class); 
+    }
+
+    public function user()
+{
+    return $this->belongsTo(User::class, 'karyawan_id', 'id');
+}
 }
