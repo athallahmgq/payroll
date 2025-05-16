@@ -49,5 +49,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('absensi', [AdminAbsensiController::class, 'index'])->name('absensi.index');
     Route::get('gaji', [AdminGajiController::class, 'index'])->name('gaji.index');
     Route::post('gaji/hitung', [AdminGajiController::class, 'hitungDanSimpan'])->name('gaji.hitung');
-    // Route::get('gaji/{gaji}/slip', [AdminGajiController::class, 'cetakSlip'])->name('gaji.slip'); // Jika ada slip
 });

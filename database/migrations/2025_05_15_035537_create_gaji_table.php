@@ -13,7 +13,7 @@ return new class extends Migration
 {
     Schema::create('gaji', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('karyawan_id')->constrained()->onDelete('cascade');
+        $table->foreignId('karyawan_id')->constrained('karyawans')->onDelete('cascade');
         $table->tinyInteger('bulan');
         $table->year('tahun');
         $table->integer('total_hadir')->default(0);
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('gajis');
+        Schema::dropIfExists('gaji');
     }
 };
