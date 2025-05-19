@@ -147,4 +147,18 @@ class GajiController extends Controller
         
         return view('admin.gaji.cetak', compact('gaji', 'bulanList'));
     }
+
+    public function clear()
+    {
+        try {
+            // Hapus semua data gaji
+            Gaji::truncate();
+            
+            return redirect()->route('admin.gaji.index')
+                ->with('success', 'Semua data gaji berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.gaji.index')
+                ->with('error', 'Gagal menghapus data gaji: ' . $e->getMessage());
+        }
+    }
 }

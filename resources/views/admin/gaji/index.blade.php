@@ -106,10 +106,9 @@
                 </div>
                 
                 <div class="flex items-center">
-                    
-                    <a href="#" onclick="hapustable()" class="inline-flex items-center px-3 py-1.5 bg-grey-200 bg-gray-100 hover:bg-red-300 text-gray-700 rounded-lg  transition-colors text-sm font-medium mr-2">
-                        <i class=""></i> Clear
-                    </a>
+                    <button id="clearButton" class="inline-flex items-center px-3 py-1.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors text-sm font-medium">
+                        <i class="fas fa-trash mr-1.5"></i> Clear
+                    </button>
                 </div>
             </div>
         </div>
@@ -189,6 +188,31 @@
         </div>
         @endif
     </div>
+
+    <!-- Clear Confirmation Modal -->
+    <div id="clearModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg p-6 max-w-md mx-4">
+            <div class="flex items-center mb-4">
+                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                    <i class="fas fa-exclamation-triangle text-red-600"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Hapus Data</h3>
+            </div>
+            <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus semua data gaji? Tindakan ini tidak dapat dibatalkan.</p>
+            <div class="flex justify-end space-x-3">
+                <button id="cancelClear" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Batal
+                </button>
+                <form action="{{ route('admin.gaji.clear') }}" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        <i class="fas fa-trash mr-1"></i> Hapus Semua
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
     
 </div>
 @endsection
@@ -220,8 +244,30 @@
                 }
             }
         });
+
+        // Clear button modal functionality
+        const clearButton = document.getElementById('clearButton');
+        const clearModal = document.getElementById('clearModal');
+        const cancelClear = document.getElementById('cancelClear');
+
+        clearButton.addEventListener('click', function() {
+            clearModal.classList.remove('hidden');
+            clearModal.classList.add('flex');
+        });
+
+        cancelClear.addEventListener('click', function() {
+            clearModal.classList.add('hidden');
+            clearModal.classList.remove('flex');
+        });
+
+        // Close modal when clicking outside
+        clearModal.addEventListener('click', function(e) {
+            if (e.target === clearModal) {
+                clearModal.classList.add('hidden');
+                clearModal.classList.remove('flex');
+            }
+        });
     });
-    
 </script>
 
 @endpush

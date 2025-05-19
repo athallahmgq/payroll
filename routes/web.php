@@ -50,4 +50,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('gaji', [AdminGajiController::class, 'index'])->name('gaji.index');
     Route::post('gaji/hitung', [AdminGajiController::class, 'hitungDanSimpan'])->name('gaji.hitung');
     Route::get('gaji/cetak/{id}', [AdminGajiController::class, 'cetak'])->name('gaji.cetak');
+    Route::delete('/gaji/clear', [AdminGajiController::class, 'clear'])->name('admin.gaji.clear');
+
 });
