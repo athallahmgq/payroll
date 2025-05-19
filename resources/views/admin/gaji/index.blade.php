@@ -1,123 +1,227 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Hitung Gaji Karyawan</h3>
-                </div>
-                <div class="card-body">
+<div class="space-y-6">
 
-                    <form action="{{ route('admin.gaji.hitung') }}" method="POST">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="karyawan_id">Karyawan</label>
-                                    <select name="karyawan_id" id="karyawan_id" class="form-control" required>
-                                        <option value="">-- Pilih Karyawan --</option>
-                                        @foreach ($karyawans as $karyawan)
-                                            <option value="{{ $karyawan->id }}">{{ $karyawan->nama }} - {{ $karyawan->nik }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="bulan">Bulan</label>
-                                    <select name="bulan" id="bulan" class="form-control" required>
-                                        @foreach ($bulanList as $key => $bulan)
-                                            <option value="{{ $key }}" {{ date('n') == $key ? 'selected' : '' }}>{{ $bulan }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="tahun">Tahun</label>
-                                    <select name="tahun" id="tahun" class="form-control" required>
-                                        @foreach ($tahunList as $key => $tahun)
-                                            <option value="{{ $key }}" {{ date('Y') == $key ? 'selected' : '' }}>{{ $tahun }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>&nbsp;</label>
-                                    <button type="submit" class="btn btn-primary btn-block">Hitung Gaji</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden p-5">
+            <div class="flex items-center">
+                <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center text-green-700 mr-4">
+                    <i class="fas fa-users text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Total Karyawan</p>
+                    <h4 class="text-xl font-bold text-gray-800">{{ count($karyawans) }}</h4>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden p-5">
+            <div class="flex items-center">
+                <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-blue-700 mr-4">
+                    <i class="fas fa-calendar-check text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Periode Aktif</p>
+                    <h4 class="text-xl font-bold text-gray-800">{{ $bulanList[date('n')] }} {{ date('Y') }}</h4>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden p-5">
+            <div class="flex items-center">
+                <div class="w-12 h-12 rounded-lg bg-yellow-100 flex items-center justify-center text-yellow-700 mr-4">
+                    <i class="fas fa-money-bill-wave text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Total Pengeluaran Gaji</p>
+                    <h4 class="text-xl font-bold text-gray-800">
+                        Rp {{ number_format($gajis->sum('gaji_bersih'), 0, ',', '.') }}
+                    </h4>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Data Gaji Karyawan</h3>
+    <!-- Salary Calculation Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-5 border-b border-gray-100">
+            <div class="flex items-center">
+                <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-700 mr-3">
+                    <i class="fas fa-calculator"></i>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped" id="gaji-table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Karyawan</th>
-                                    <th>NIK</th>
-                                    <th>Periode</th>
-                                    <th>Kehadiran</th>
-                                    <th>Gaji Pokok</th>
-                                    <th>Potongan</th>
-                                    <th>Gaji Bersih</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($gajis as $index => $gaji)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $gaji->karyawan->nama ?? 'Nama tidak tersedia' }}</td>
-                                    <td>{{ $gaji->karyawan->nik }}</td>
-                                    <td>{{ $bulanList[$gaji->bulan] }} {{ $gaji->tahun }}</td>
-                                    <td>
-                                        Hadir: {{ $gaji->total_hadir }} kali<br>
-                                        Izin: {{ $gaji->total_izin }} kali<br>
-                                        Sakit: {{ $gaji->total_sakit }} kali<br>
-                                        Tanpa Ket: {{ $gaji->total_tanpa_keterangan }} kali
-                                    </td>
-                                    <td>Rp {{ number_format($gaji->gaji_pokok, 0, ',', '.') }}</td>
-                                    <td>Rp {{ number_format($gaji->potongan, 0, ',', '.') }}</td>
-                                    <td>Rp {{ number_format($gaji->gaji_bersih, 0, ',', '.') }}</td>
-                                    <td>
-                                        <a href="{{ route('admin.gaji.cetak', $gaji->id) }}" class="btn btn-sm btn-info" target="_blank">
-                                            <i class="fa fa-print"></i> Cetak Slip
-                                        </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                <h3 class="text-lg font-semibold text-gray-800">Hitung Gaji Karyawan</h3>
+            </div>
+        </div>
+        
+        <div class="p-5">
+            <form action="{{ route('admin.gaji.hitung') }}" method="POST" class="space-y-4 md:space-y-0 md:flex md:flex-wrap md:items-end md:gap-4">
+                @csrf
+                <div class="w-full md:w-auto md:flex-1">
+                    <label for="karyawan_id" class="block text-sm font-medium text-gray-700 mb-1">Karyawan</label>
+                    <select name="karyawan_id" id="karyawan_id" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                        <option value="">-- Pilih Karyawan --</option>
+                        @foreach ($karyawans as $karyawan)
+                            <option value="{{ $karyawan->id }}">{{ $karyawan->nama }} - {{ $karyawan->nik }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <div class="w-full md:w-auto">
+                    <label for="bulan" class="block text-sm font-medium text-gray-700 mb-1">Bulan</label>
+                    <select name="bulan" id="bulan" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                        @foreach ($bulanList as $key => $bulan)
+                            <option value="{{ $key }}" {{ date('n') == $key ? 'selected' : '' }}>{{ $bulan }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <div class="w-full md:w-auto">
+                    <label for="tahun" class="block text-sm font-medium text-gray-700 mb-1">Tahun</label>
+                    <select name="tahun" id="tahun" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                        @foreach ($tahunList as $key => $tahun)
+                            <option value="{{ $key }}" {{ date('Y') == $key ? 'selected' : '' }}>{{ $tahun }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <div class="w-full md:w-auto">
+                    <button type="submit" class="w-full md:w-auto px-4 py-2.5 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium flex items-center justify-center">
+                        <i class="fas fa-calculator mr-2"></i> Hitung Gaji
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Salary Data Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-5 border-b border-gray-100">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-700 mr-3">
+                        <i class="fas fa-money-bill-wave"></i>
                     </div>
+                    <h3 class="text-lg font-semibold text-gray-800">Data Gaji Karyawan</h3>
+                </div>
+                
+                <div class="flex items-center">
+                    
+                    <a href="#" onclick="hapustable()" class="inline-flex items-center px-3 py-1.5 bg-grey-200 bg-gray-100 hover:bg-red-300 text-gray-700 rounded-lg  transition-colors text-sm font-medium mr-2">
+                        <i class=""></i> Clear
+                    </a>
                 </div>
             </div>
         </div>
+        
+        <div class="overflow-x-auto">
+            <table  class="w-full" id="gaji-table">
+                <thead>
+                    <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class="px-4 py-3 bg-gray-50">No</th>
+                        <th class="px-4 py-3 bg-gray-50">Nama Karyawan</th>
+                        <th class="px-4 py-3 bg-gray-50">NIK</th>
+                        <th class="px-4 py-3 bg-gray-50">Periode</th>
+                        <th class="px-4 py-3 bg-gray-50">Kehadiran</th>
+                        <th class="px-4 py-3 bg-gray-50">Gaji Pokok</th>
+                        <th class="px-4 py-3 bg-gray-50">Potongan</th>
+                        <th class="px-4 py-3 bg-gray-50">Gaji Bersih</th>
+                        <th class="px-4 py-3 bg-gray-50">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    @foreach ($gajis as $index => $gaji)
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-3 text-gray-600">{{ $index + 1 }}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold mr-3">
+                                    {{ substr($gaji->karyawan->nama ?? 'N', 0, 1) }}
+                                </div>
+                                <div class="font-medium text-gray-800">
+                                    {{ $gaji->karyawan->nama ?? 'Nama tidak tersedia' }}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-gray-600">{{ $gaji->karyawan->nik ?? 'N/A' }}</td>
+                        <td class="px-4 py-3 text-gray-600">{{ $bulanList[$gaji->bulan] }} {{ $gaji->tahun }}</td>
+                        <td class="px-4 py-3">
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                                    <span class="text-sm">Hadir: <span class="font-medium">{{ $gaji->total_hadir }} kali</span></span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span>
+                                    <span class="text-sm">Izin: <span class="font-medium">{{ $gaji->total_izin }} kali</span></span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
+                                    <span class="text-sm">Sakit: <span class="font-medium">{{ $gaji->total_sakit }} kali</span></span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-2 h-2 rounded-full bg-red-500 mr-2"></span>
+                                    <span class="text-sm">Tanpa Ket: <span class="font-medium">{{ $gaji->total_tanpa_keterangan }} kali</span></span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 font-medium text-gray-800">Rp {{ number_format($gaji->gaji_pokok, 0, ',', '.') }}</td>
+                        <td class="px-4 py-3 font-medium text-red-600">Rp {{ number_format($gaji->potongan, 0, ',', '.') }}</td>
+                        <td class="px-4 py-3 font-medium text-green-700">Rp {{ number_format($gaji->gaji_bersih, 0, ',', '.') }}</td>
+                        <td class="px-4 py-3">
+                            <a href="{{ route('admin.gaji.cetak', $gaji->id) }}" class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs font-medium" target="_blank">
+                                <i class="fas fa-print mr-1.5"></i> Cetak Slip
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        
+        @if(count($gajis) == 0)
+        <div class="text-center py-12">
+            <div class="w-20 h-20 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
+                <i class="fas fa-money-bill-slash text-gray-400 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-800 mb-2">Belum ada data gaji</h3>
+            <p class="text-gray-500">Silahkan pilih karyawan dan periode untuk menghitung gaji</p>
+        </div>
+        @endif
     </div>
+    
 </div>
 @endsection
 
+@push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.tailwindcss.min.css">
+@endpush
+
 @push('scripts')
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.tailwindcss.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#gaji-table').DataTable({
-            "ordering": false
+            "ordering": false,
+            "language": {
+                "search": "Cari:",
+                "lengthMenu": "Tampilkan _MENU_ data",
+                "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                "infoEmpty": "Tidak ada data yang ditampilkan",
+                "infoFiltered": "(difilter dari _MAX_ total data)",
+                "zeroRecords": "Tidak ada data yang cocok",
+                "paginate": {
+                    "first": "Pertama",
+                    "last": "Terakhir",
+                    "next": "Selanjutnya",
+                    "previous": "Sebelumnya"
+                }
+            }
         });
     });
+    
 </script>
+
 @endpush

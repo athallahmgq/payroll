@@ -73,9 +73,9 @@
                 <div class="p-6 border-b border-gray-100">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-xl bg-green-700 flex items-center justify-center">
-                            <i class="fas fa-leaf text-white"></i>
+                            <div class="logo text-white font-bold">Q</div>
                         </div>
-                        <h2 class="text-xl font-bold text-green-700">{{ config('app.name', 'Laravel') }}</h2>
+                        <h2 class="text-xl font-bold text-green-700">PT. QINTARA</h2>
                     </div>
                     @auth
                         <div class="mt-5 flex items-center p-3 bg-mint-50 rounded-xl">

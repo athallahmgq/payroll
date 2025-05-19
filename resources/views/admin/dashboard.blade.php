@@ -59,347 +59,184 @@
                 </div>
             </div>
         </div>
-
-        <!-- First Row Cards -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Karyawan Baru Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                    <h4 class="font-semibold text-gray-800">Karyawan Terbaru</h4>
-                    <a href="{{ route('admin.karyawan.index') }}" class="text-sm text-green-700 hover:underline flex items-center">
-                        Lihat Semua
-                        <i class="fas fa-chevron-right ml-1 text-xs"></i>
-                    </a>
-                </div>
-                
-                <div class="p-6">
-                    @if (isset($karyawanTerbaru) && $karyawanTerbaru->count() > 0)
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead>
-                                    <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        <th class="px-4 py-3 bg-gray-50">Nama</th>
-                                        <th class="px-4 py-3 bg-gray-50">NIK</th>
-                                        <th class="px-4 py-3 bg-gray-50">Posisi</th>
-                                        <th class="px-4 py-3 bg-gray-50">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100">
-                                    @foreach ($karyawanTerbaru as $k_data)
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3">{{ $k_data->user->name }}</td>
-                                            <td class="px-4 py-3">{{ $k_data->nik }}</td>
-                                            <td class="px-4 py-3">{{ $k_data->posisi }}</td>
-                                            <td class="px-4 py-3">
-                                                <a href="{{ route('admin.karyawan.show', $k_data->id) }}" class="px-3 py-1 bg-green-700 text-white text-xs rounded-lg hover:bg-green-800 transition-colors">
-                                                    Detail
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="mt-4 flex justify-end">
-                            <a href="{{ route('admin.karyawan.create') }}" class="inline-flex items-center px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm font-medium">
-                                <i class="fas fa-plus mr-2"></i> Tambah Karyawan Baru
-                            </a>
-                        </div>
-                    @else
-                        <div class="text-center py-8">
-                            <div class="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
-                                <i class="fas fa-users text-gray-400 text-xl"></i>
-                            </div>
-                            <p class="text-gray-500 mb-4">Belum ada data karyawan.</p>
-                            <a href="{{ route('admin.karyawan.create') }}" class="inline-flex items-center px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm font-medium">
-                                <i class="fas fa-plus mr-2"></i> Tambah Karyawan Baru
-                            </a>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
+        
+        <div class="grid grid-cols-1 gap-6">
             <!-- Absensi Hari Ini Card -->
+            
+            <!-- Quick Actions Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                    <h4 class="font-semibold text-gray-800">Absensi Hari Ini</h4>
-                    <a href="{{ route('admin.absensi.index') }}" class="text-sm text-green-700 hover:underline flex items-center">
-                        Lihat Semua
-                        <i class="fas fa-chevron-right ml-1 text-xs"></i>
-                    </a>
+                <div class="px-6 py-4 border-b border-gray-100">
+                    <h4 class="font-semibold text-gray-800">Aksi Cepat</h4>
                 </div>
                 
                 <div class="p-6">
-                    @if (isset($absensiHariIni) && $absensiHariIni->count() > 0)
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead>
-                                    <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        <th class="px-4 py-3 bg-gray-50">Nama</th>
-                                        <th class="px-4 py-3 bg-gray-50">Jam Masuk</th>
-                                        <th class="px-4 py-3 bg-gray-50">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100">
-                                    @foreach ($absensiHariIni as $absensi)
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3">{{ $absensi->karyawan && $absensi->karyawan->user ? $absensi->karyawan->user->name : '-' }}</td>
-                                            <td class="px-4 py-3">{{ $absensi->jam_masuk ? \Carbon\Carbon::parse($absensi->jam_masuk)->format('H:i') : '-' }}</td>
-                                            <td class="px-4 py-3">
-                                                @if($absensi->status == 'tepat waktu')
-                                                    <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                                                        {{ ucwords($absensi->status) }}
-                                                    </span>
-                                                @elseif($absensi->status == 'terlambat')
-                                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
-                                                        {{ ucwords($absensi->status) }}
-                                                    </span>
-                                                @else
-                                                    <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">
-                                                        {{ ucwords($absensi->status) }}
-                                                    </span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="text-center py-8">
-                            <div class="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
-                                <i class="fas fa-calendar-day text-gray-400 text-xl"></i>
-                            </div>
-                            <p class="text-gray-500">Belum ada data absensi hari ini.</p>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        <!-- Second Row Cards -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Rekap Absensi Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                    <h4 class="font-semibold text-gray-800">Rekap Absensi</h4>
-                </div>
-                
-                <div class="p-6">
-                    <form method="GET" action="{{ route('admin.absensi.index') }}" class="mb-6 bg-gray-50 p-4 rounded-lg">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                                <label for="karyawan_id_filter" class="block text-xs font-medium text-gray-700 mb-1">Karyawan:</label>
-                                <select name="karyawan_id" id="karyawan_id_filter" class="w-full text-sm rounded-lg border-gray-200 focus:border-green-500 focus:ring-green-500">
-                                    <option value="">Semua Karyawan</option>
-                                    @if (isset($karyawans))
-                                        @foreach ($karyawans as $k_data)
-                                            <option value="{{ $k_data->id }}" {{ request('karyawan_id') == $k_data->id ? 'selected' : '' }}>
-                                                {{ $k_data->user->name }} ({{ $k_data->nik }})
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                            <div>
-                                <label for="bulan_filter" class="block text-xs font-medium text-gray-700 mb-1">Bulan:</label>
-                                <select name="bulan" id="bulan_filter" class="w-full text-sm rounded-lg border-gray-200 focus:border-green-500 focus:ring-green-500">
-                                    @if (isset($listBulan))
-                                        @foreach($listBulan as $key => $namaBulan)
-                                            <option value="{{ $key }}" {{ $key == ($selectedBulan ?? date('n')) ? 'selected' : '' }}>{{ $namaBulan }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                            <div>
-                                <label for="tahun_filter" class="block text-xs font-medium text-gray-700 mb-1">Tahun:</label>
-                                <select name="tahun" id="tahun_filter" class="w-full text-sm rounded-lg border-gray-200 focus:border-green-500 focus:ring-green-500">
-                                    @if (isset($listTahun))
-                                        @foreach($listTahun as $th)
-                                            <option value="{{ $th }}" {{ $th == ($selectedTahun ?? date('Y')) ? 'selected' : '' }}>{{ $th }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                            <div class="flex items-end">
-                                <button type="submit" class="w-full px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm">
-                                    <i class="fas fa-filter mr-1"></i> Filter
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
-                    @if (isset($absensi) && $absensi->count() > 0)
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead>
-                                    <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        <th class="px-4 py-3 bg-gray-50">Karyawan</th>
-                                        <th class="px-4 py-3 bg-gray-50">Tanggal</th>
-                                        <th class="px-4 py-3 bg-gray-50">Jam Masuk</th>
-                                        <th class="px-4 py-3 bg-gray-50">Jam Pulang</th>
-                                        <th class="px-4 py-3 bg-gray-50">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100">
-                                    @foreach ($absensi as $item)
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3">{{ $item->karyawan && $item->karyawan->user ? $item->karyawan->user->name : '-' }}</td>
-                                            <td class="px-4 py-3">{{ \Carbon\Carbon::parse($item->tanggal)->isoFormat('DD MMM YYYY') }}</td>
-                                            <td class="px-4 py-3">{{ $item->jam_masuk ? \Carbon\Carbon::parse($item->jam_masuk)->format('H:i') : '-' }}</td>
-                                            <td class="px-4 py-3">{{ $item->jam_pulang ? \Carbon\Carbon::parse($item->jam_pulang)->format('H:i') : '-' }}</td>
-                                            <td class="px-4 py-3">
-                                                @if($item->status == 'tepat waktu')
-                                                    <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                                                        {{ ucwords($item->status) }}
-                                                    </span>
-                                                @elseif($item->status == 'terlambat')
-                                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
-                                                        {{ ucwords($item->status) }}
-                                                    </span>
-                                                @else
-                                                    <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">
-                                                        {{ ucwords($item->status) }}
-                                                    </span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        @if (isset($absensi) && method_exists($absensi, 'hasPages') && $absensi->hasPages())
-                            <div class="mt-4">
-                                {{ $absensi->appends(request()->query())->links() }}
-                            </div>
-                        @endif
-                        
-                        <div class="mt-4 flex justify-end">
-                            <a href="{{ route('admin.absensi.index') }}" class="inline-flex items-center px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm font-medium">
-                                <i class="fas fa-list mr-2"></i> Rekap Lengkap Absensi
-                            </a>
-                        </div>
-                    @else
-                        <div class="text-center py-8">
-                            <div class="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
-                                <i class="fas fa-calendar-times text-gray-400 text-xl"></i>
-                            </div>
-                            <p class="text-gray-500">Tidak ada data absensi untuk filter yang dipilih.</p>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Penggajian Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                    <h4 class="font-semibold text-gray-800">Penggajian Karyawan</h4>
-                    <a href="{{ route('admin.gaji.index') }}" class="text-sm text-green-700 hover:underline flex items-center">
-                        Lihat Semua
-                        <i class="fas fa-chevron-right ml-1 text-xs"></i>
-                    </a>
-                </div>
-                
-                <div class="p-6">
-                    <div class="mb-6 bg-gray-50 p-4 rounded-lg">
-                        <h5 class="font-medium text-gray-700 mb-3">Hitung Gaji Cepat</h5>
-                        <form action="{{ route('admin.gaji.hitung') }}" method="POST">
-                            @csrf
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                <div>
-                                    <label for="karyawan_id" class="block text-xs font-medium text-gray-700 mb-1">Karyawan:</label>
-                                    @if (isset($karyawans))
-                                        <select name="karyawan_id" id="karyawan_id" class="w-full text-sm rounded-lg border-gray-200 focus:border-green-500 focus:ring-green-500" required>
-                                            <option value="">-- Pilih Karyawan --</option>
-                                            @foreach ($karyawans as $karyawan)
-                                                <option value="{{ $karyawan->id }}">{{ $karyawan->nama }} - {{ $karyawan->nik }}</option>
-                                            @endforeach
-                                        </select>
-                                    @endif
+                    <div class="grid grid-cols-1 gap-3">
+                        <a href="{{ route('admin.absensi.index') }}" class="flex items-center justify-between p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-calendar-alt text-green-600"></i>
                                 </div>
                                 <div>
-                                    <label for="bulan" class="block text-xs font-medium text-gray-700 mb-1">Bulan:</label>
-                                    <select name="bulan" id="bulan" class="w-full text-sm rounded-lg border-gray-200 focus:border-green-500 focus:ring-green-500" required>
-                                        @if (isset($bulanList))
-                                            @foreach ($bulanList as $key => $bulan)
-                                                <option value="{{ $key }}" {{ date('n') == $key ? 'selected' : '' }}>{{ $bulan }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="tahun" class="block text-xs font-medium text-gray-700 mb-1">Tahun:</label>
-                                    <select name="tahun" id="tahun" class="w-full text-sm rounded-lg border-gray-200 focus:border-green-500 focus:ring-green-500" required>
-                                        @if (isset($tahunList))
-                                            @foreach ($tahunList as $key => $tahun)
-                                                <option value="{{ $key }}" {{ date('Y') == $key ? 'selected' : '' }}>{{ $tahun }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                                <div class="flex items-end">
-                                    <button type="submit" class="w-full px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm">
-                                        <i class="fas fa-calculator mr-1"></i> Hitung Gaji
-                                    </button>
+                                    <h5 class="font-medium text-gray-800">Rekap Absensi</h5>
+                                    <p class="text-sm text-gray-500">Lihat laporan kehadiran</p>
                                 </div>
                             </div>
-                        </form>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </a>
+
+                        <a href="{{ route('admin.gaji.index') }}" class="flex items-center justify-between p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-money-bill-wave text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Penggajian</h5>
+                                    <p class="text-sm text-gray-500">Kelola gaji karyawan</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </a>
+
+                        <button onclick="toggleEmployeeForm()" class="flex items-center justify-between p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors text-left w-full">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-user-plus text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Tambah Karyawan</h5>
+                                    <p class="text-sm text-gray-500">Daftarkan karyawan baru</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </button>
                     </div>
-
-                    @if (isset($gajiTerbaru) && $gajiTerbaru->count() > 0)
-                        <h5 class="font-medium text-gray-700 mb-3">Data Gaji Terbaru</h5>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead>
-                                    <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        <th class="px-4 py-3 bg-gray-50">Nama</th>
-                                        <th class="px-4 py-3 bg-gray-50">Periode</th>
-                                        <th class="px-4 py-3 bg-gray-50">Gaji Bersih</th>
-                                        <th class="px-4 py-3 bg-gray-50">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100">
-                                    @foreach ($gajiTerbaru as $gaji)
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3">{{ $gaji->karyawan->user->name ?? 'Nama tidak tersedia' }}</td>
-                                            <td class="px-4 py-3">{{ $bulanList[$gaji->bulan] ?? $gaji->bulan }} {{ $gaji->tahun }}</td>
-                                            <td class="px-4 py-3 font-medium">Rp {{ number_format($gaji->gaji_bersih, 0, ',', '.') }}</td>
-                                            <td class="px-4 py-3">
-                                                <a href="{{ route('admin.gaji.cetak', $gaji->id) }}" class="px-3 py-1 bg-green-700 text-white text-xs rounded-lg hover:bg-green-800 transition-colors inline-flex items-center" target="_blank">
-                                                    <i class="fas fa-print mr-1"></i> Cetak
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="text-center py-8">
-                            <div class="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
-                                <i class="fas fa-money-bill-wave text-gray-400 text-xl"></i>
-                            </div>
-                            <p class="text-gray-500">Belum ada data gaji.</p>
-                        </div>
-                    @endif
                 </div>
             </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex flex-wrap justify-end gap-3 mt-6">
-            <a href="{{ route('admin.karyawan.create') }}" class="inline-flex items-center px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm font-medium">
-                <i class="fas fa-user-plus mr-2"></i> Tambah Karyawan
-            </a>
-            <a href="{{ route('admin.absensi.index') }}" class="inline-flex items-center px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm font-medium">
-                <i class="fas fa-calendar-alt mr-2"></i> Rekap Absensi
-            </a>
-            <a href="{{ route('admin.gaji.index') }}" class="inline-flex items-center px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm font-medium">
-                <i class="fas fa-money-bill-wave mr-2"></i> Penggajian
-            </a>
         </div>
     </div>
+
+    <!-- Employee Detail Modal -->
+    <div id="employee-detail-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Detail Karyawan</h3>
+                <button onclick="closeEmployeeDetail()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="employee-detail-content" class="p-6">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Employee Edit Modal -->
+    <div id="employee-edit-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-96 overflow-y-auto">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Edit Karyawan</h3>
+                <button onclick="closeEmployeeEdit()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="employee-edit-content" class="p-6">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle employee form
+        function toggleEmployeeForm() {
+            const form = document.getElementById('employee-form');
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+                form.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                form.classList.add('hidden');
+            }
+        }
+
+        // Search and filter functionality
+        document.getElementById('employee-search').addEventListener('keyup', filterEmployees);
+        document.getElementById('position-filter').addEventListener('change', filterEmployees);
+
+        function filterEmployees() {
+            const searchTerm = document.getElementById('employee-search').value.toLowerCase();
+            const positionFilter = document.getElementById('position-filter').value.toLowerCase();
+            const rows = document.querySelectorAll('.employee-row');
+
+            rows.forEach(row => {
+                const name = row.getAttribute('data-name');
+                const position = row.getAttribute('data-position');
+                const matchesSearch = name.includes(searchTerm);
+                const matchesPosition = positionFilter === '' || position === positionFilter;
+
+                if (matchesSearch && matchesPosition) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Show employee detail
+        function showEmployeeDetail(id) {
+            fetch(`/admin/karyawan/${id}`)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const content = doc.querySelector('#content');
+                    
+                    document.getElementById('employee-detail-content').innerHTML = content.innerHTML;
+                    document.getElementById('employee-detail-modal').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error loading employee details');
+                });
+        }
+
+        function closeEmployeeDetail() {
+            document.getElementById('employee-detail-modal').classList.add('hidden');
+        }
+
+        // Edit employee
+        function editEmployee(id) {
+            fetch(`/admin/karyawan/${id}/edit`)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const content = doc.querySelector('#content');
+                    
+                    document.getElementById('employee-edit-content').innerHTML = content.innerHTML;
+                    document.getElementById('employee-edit-modal').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error loading employee edit form');
+                });
+        }
+
+        function closeEmployeeEdit() {
+            document.getElementById('employee-edit-modal').classList.add('hidden');
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('employee-detail-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEmployeeDetail();
+            }
+        });
+
+        document.getElementById('employee-edit-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEmployeeEdit();
+            }
+        });
+    </script>
 @endsection
 
 @push('styles')
