@@ -17,7 +17,7 @@ Route::get('/', function () {
         if (Auth::user()->role == 'admin') return redirect()->route('admin.dashboard');
         if (Auth::user()->role == 'karyawan') return redirect()->route('karyawan.dashboard');
     }
-    return view('welcome'); // Atau view('auth.login') jika ingin langsung ke login
+    return view('auth.login'); // Atau view('auth.login') jika ingin langsung ke login
 })->name('home');
 
 // Guest Routes (Hanya bisa diakses jika belum login)
