@@ -183,7 +183,7 @@
         <div class="w-20 h-20 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
             <i class="fas fa-money-bill-slash text-gray-400 text-2xl"></i>
         </div>
-        <h3 class="text-lg font-medium text-gray-800 mb-2">Belum ada data gaji</h3>
+        <h3 class="text-lg font-medium text-gray-800 mb-2">Data gaji belum ada</h3>
         <p class="text-gray-500">Silahkan pilih karyawan dan periode untuk menghitung gaji</p>
     </div>
     @endif
